@@ -1,0 +1,15 @@
+{
+  "name": "eventora-project",
+  "version": "1.0.0",
+  "description": "Eventora - Smart Event Management and Booking Platform (MERN)",
+  "scripts": {
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "seed": "npm --prefix server run seed",
+    "db:view": "npm --prefix server run db:view",
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
