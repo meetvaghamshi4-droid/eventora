@@ -1,121 +1,300 @@
-# Eventora — Smart Event Management & Booking Platform
+# 🎟️ Eventora — Smart Event Management & Booking Platform
 
-> **Full Stack Development (MERN Stack) | Clean, Streamlined & Student-Friendly Implementation**
-
----
-
-## 🌟 Overview
-
-**Eventora** is a complete, full-stack event ticketing and management web application built using the modern **MERN stack** (MongoDB, Express.js, React.js, Node.js).
-
-The application has been simplified into an intuitive **3-Portal Architecture** (Attendee, Organizer, Admin) so it is clean, pleasant to use, and effortless to demonstrate and explain during a college viva.
+A full-stack **MERN** (MongoDB, Express, React, Node.js) web app for discovering events, booking tickets, and managing events. It has three role-based portals: **Attendee**, **Organizer**, and **Admin**.
 
 ---
 
-## 🧭 Simplified Architecture: 3 Unified Portals
+## 📑 Table of Contents
 
-Instead of dozens of scattered, confusing pages, the application is organized into **3 role-specific portals**:
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Environment Variables](#-environment-variables)
+- [Demo Accounts](#-demo-accounts)
+- [API Reference](#-api-reference)
+- [Database Models](#-database-models)
+- [How It Works](#-how-it-works)
+- [Deployment](#-deployment)
+- [Available Scripts](#-available-scripts)
+
+---
+
+## ✨ Features
+
+### 🌐 Public
+- Home page, event search and filtering (title, city, category)
+- Event details with live seat availability
+- Register / Login, About and Contact pages
+
+### 👤 Attendee Portal — `/dashboard`
+- Book tickets with live total price calculation
+- View all bookings (active and history)
+- Printable digital pass with a unique reference code (e.g. `EVT-7X92K4`)
+- Cancel a booking, which releases the seats back to the event
+- Edit profile (name, phone)
+
+### 🏢 Organizer Portal — `/organizer`
+- Stats: tickets sold, events hosted, total revenue (₹)
+- Create, edit, and delete events
+- Capacity progress bars for each event
+- View the attendee list (name, email, phone, booking reference) per event
+
+### 👑 Admin Portal — `/admin`
+- Platform-wide statistics
+- User management: change roles (`attendee` / `organizer` / `admin`) and delete users
+- Event moderation: set status to `published`, `draft`, or `cancelled`
+- View all bookings across the platform
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technologies |
+|---|---|
+| **Frontend** | React 18, Vite, React Router v6, Tailwind CSS, Axios, Lucide React |
+| **Backend** | Node.js, Express, Mongoose |
+| **Database** | MongoDB (local or Atlas) |
+| **Auth** | JWT, bcryptjs, cookie-parser |
+| **Tools** | Morgan (logging), CORS, dotenv |
+
+---
+
+## 📁 Project Structure
 
 ```
-                       ┌──────────────────────┐
-                       │   Public Experience  │
-                       │ Home • Explore Events│
-                       │ Event Details & Pass │
-                       └──────────┬───────────┘
-                                  │ (Login with 1-click Demo)
-        ┌─────────────────────────┼─────────────────────────┐
-        ▼                         ▼                         ▼
-┌──────────────────┐    ┌──────────────────┐     ┌──────────────────┐
-│ Attendee Portal  │    │ Organizer Portal │     │   Admin Center   │
-│   (/dashboard)   │    │   (/organizer)   │     │     (/admin)     │
-├──────────────────┤    ├──────────────────┤     ├──────────────────┤
-│ • Active Passes  │    │ • Sales & Revenue│     │ • Platform Stats │
-│ • Order History  │    │ • My Events List │     │ • User Roles     │
-│ • Cancel & Print │    │ • Create Event   │     │ • Event Moderation
-│ • Profile Edit   │    │ • Attendee List  │     │ • All Bookings   │
-└──────────────────┘    └──────────────────┘     └──────────────────┘
+eventora/
+├── package.json              # Root helper scripts
+├── README.md
+│
+├── server/                   # Backend API
+│   ├── server.js             # Entry point
+│   ├── seed.js               # Demo data seeder
+│   ├── viewDb.js             # Print DB contents in terminal
+│   ├── .env.example
+│   ├── config/db.js          # MongoDB connection
+│   ├── middleware/
+│   │   ├── auth.js           # protect + authorize (JWT & roles)
+│   │   └── error.js          # Central error handler
+│   ├── models/               # User, Event, Booking
+│   ├── controllers/          # auth, event, booking, dashboard, admin
+│   └── routes/               # Route definitions
+│
+└── client/                   # Frontend (React + Vite)
+    ├── index.html
+    ├── vite.config.js        # Dev server + /api proxy
+    ├── tailwind.config.js
+    ├── .env.example
+    └── src/
+        ├── main.jsx
+        ├── App.jsx           # Routes
+        ├── index.css         # Tailwind + print styles
+        ├── services/api.js   # Axios instance
+        ├── context/AuthContext.jsx
+        ├── components/       # Navbar, Footer, EventCard, StatCard, ...
+        └── pages/            # Home, ExploreEvents, EventDetails, Login,
+                              # Register, Dashboard, MyTickets,
+                              # OrganizerPortal, AdminPortal, ...
 ```
 
 ---
 
-## 🚀 Key Features
+## 🚀 Getting Started
 
-### 1. Public Discovery & Booking
-- **Hero & Search**: Search by title, keyword, city, or category (*Technology, Music, Business, Workshops, Arts, Sports*).
-- **Live Event Details**: High-resolution banner, date, venue, organizer badge, description, and real-time seat availability bar.
-- **Pass Reservation**: Select ticket quantity, calculate total live, and reserve passes with instant capacity decrement.
+### Prerequisites
+- [Node.js](https://nodejs.org/) v18 or higher
+- [MongoDB](https://www.mongodb.com/try/download/community) running locally, **or** a free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster
 
-### 2. Unified Attendee Portal (`/dashboard`)
-- **Active Passes & History**: All booked tickets in one place.
-- **Digital Printable Pass**: Click *"View & Print"* to get an official pass with unique booking reference code (e.g. `EVT-7X92K4`) formatted for clean browser printing (`window.print()`).
-- **Cancellation with Capacity Release**: Cancelling a reservation immediately restores available capacity for other users.
-- **Profile Settings**: Simple tab to update name and phone number.
-
-### 3. Unified Organizer Portal (`/organizer`)
-- **Performance Metrics**: Real-time stats on tickets sold, hosted events, and total gross revenue (₹).
-- **My Events List**: Live capacity progress bars (`ticketsBooked / totalCapacity`), edit listing, and delete listing.
-- **Attendee Registry Modal**: 1-click view of all registered attendee names, emails, phones, and booking references for each event.
-- **Create / Edit Event Tab**: Clean form with instant poster preview, date, schedule, venue, ticket price, and seat capacity.
-
-### 4. Unified Admin Center (`/admin`)
-- **Global Overview**: Platform metrics for total users, events, orders, and total ticket collection.
-- **User Governance Tab**: Table of registered users with inline role promotion (`attendee` ⇄ `organizer` ⇄ `admin`) and account deletion.
-- **Event Moderation Tab**: Review all listings with inline publication status changer (`published`, `draft`, `cancelled`).
-- **Booking Audit Tab**: Platform-wide transaction history.
-
----
-
-## 🔑 1-Click Demo Accounts
-
-On the [Login page](http://localhost:5173/login), click any quick-fill button to log in instantly:
-
-| Role | Email | Password | Permissions |
-| :--- | :--- | :--- | :--- |
-| **👑 Admin** | `admin@eventora.com` | `admin123` | Full administrative control, user moderation, all events and bookings |
-| **🏢 Organizer** | `organizer@eventora.com` | `organizer123` | Create & edit events, track capacity, view attendee lists |
-| **🎵 Organizer 2** | `music@eventora.com` | `organizer123` | Live concerts and cultural festival management |
-| **👤 Attendee** | `attendee@eventora.com` | `attendee123` | Book tickets, view and print digital passes, cancel reservations |
-| **👤 Attendee 2** | `priya@eventora.com` | `attendee123` | Independent attendee account |
-
----
-
-## ⚡ How to Run the Project
-
-### 1. Start Backend Server
+### 1. Clone the repository
 ```bash
-cd server
-npm run dev
-# Server running on http://localhost:5000 (connected to MongoDB)
+git clone https://github.com/meetvaghamshi4-droid/eventora.git
+cd eventora
 ```
 
-### 2. Start Frontend Client
+### 2. Install dependencies
 ```bash
-cd client
-npm run dev
-# Client running on http://localhost:5173
+npm run install:all
+```
+Or install manually:
+```bash
+npm install
+npm --prefix server install
+npm --prefix client install
 ```
 
-### 3. Database Tools
-- **View Database in Terminal**: `npm run db:view` (prints formatted console tables of `users`, `events`, and `bookings`).
-- **Re-seed Sample Data**: `npm --prefix server run seed`
+### 3. Configure environment variables
+```bash
+cp server/.env.example server/.env
+cp client/.env.example client/.env
+```
+Then edit `server/.env` (see [Environment Variables](#-environment-variables)).
+
+### 4. Seed the database (optional but recommended)
+```bash
+npm run seed
+```
+This **clears** the existing data and inserts demo users, events, and bookings.
+
+### 5. Run the app
+Open **two terminals**:
+
+```bash
+# Terminal 1 — Backend (http://localhost:5000)
+npm run server
+
+# Terminal 2 — Frontend (http://localhost:5173)
+npm run client
+```
+
+Open **http://localhost:5173** in your browser.
+Check that the API is up: **http://localhost:5000/api/health**
 
 ---
 
-## 🎓 Viva & Demonstration Cheat-Sheet
+## 🔐 Environment Variables
 
-Here are 5 core questions examiners ask during viva presentations, along with concise student answers:
+### `server/.env`
+| Variable | Description | Example |
+|---|---|---|
+| `PORT` | API server port | `5000` |
+| `NODE_ENV` | Environment | `development` |
+| `MONGO_URI` | MongoDB connection string | `mongodb://127.0.0.1:27017/eventora` |
+| `JWT_SECRET` | Secret used to sign tokens (use a long random string) | `change_me_to_a_long_random_string` |
+| `JWT_EXPIRE` | Token lifetime | `7d` |
+| `CLIENT_URL` | Frontend URL (for CORS) | `http://localhost:5173` |
 
-### Q1: How does capacity validation prevent overbooking?
-> *"When a booking request arrives, the backend controller checks `event.totalCapacity - event.ticketsBooked`. If the requested quantity exceeds the remaining seats, the server rejects it. If valid, the booking is created and `event.ticketsBooked` is incremented. When an attendee cancels, capacity is safely released back."*
+### `client/.env`
+| Variable | Description |
+|---|---|
+| `VITE_API_URL` | Backend API base URL. Leave empty in development (Vite proxies `/api`). In production, set it to e.g. `https://your-backend.onrender.com/api` |
 
-### Q2: How does Role-Based Access Control (RBAC) work?
-> *"We use signed JSON Web Tokens (JWT). The token contains the user's `id` and `role`. On every protected request, our backend `protect` middleware verifies the token and attaches `req.user`. Then `authorize('organizer', 'admin')` verifies permissions before executing controller logic. The frontend also uses `ProtectedRoute` to guard routes."*
+> ⚠️ Never commit your real `.env` files. They are already listed in `.gitignore`.
 
-### Q3: Why use Mongoose schemas with a NoSQL database?
-> *"MongoDB is schema-less by default, but production applications need data integrity. Mongoose enforces required fields, defaults, data types, email regex validation, and relational references between Users, Events, and Bookings using ObjectIds."*
+---
 
-### Q4: How does the digital pass print cleanly?
-> *"In `client/src/index.css`, we use CSS `@media print` rules. When `window.print()` is triggered, all navigation elements and buttons are hidden (`display: none`), and only the ticket pass card is sent to the printer or saved as PDF."*
+## 🔑 Demo Accounts
 
-### Q5: How do frontend and backend connect in development?
-> *"Our Vite configuration (`vite.config.js`) proxies all `/api` requests to `http://localhost:5000`. This allows seamless API communication without CORS configuration issues in development."*
+After running `npm run seed`:
+
+| Role | Email | Password |
+|---|---|---|
+| Admin | `admin@eventora.com` | `admin123` |
+| Organizer | `organizer@eventora.com` | `organizer123` |
+| Organizer 2 | `music@eventora.com` | `organizer123` |
+| Attendee | `attendee@eventora.com` | `attendee123` |
+| Attendee 2 | `priya@eventora.com` | `attendee123` |
+
+> These are for development only. Remove or change them before any public deployment.
+
+---
+
+## 📡 API Reference
+
+Base URL: `http://localhost:5000/api`
+
+### Auth — `/auth`
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| POST | `/register` | Public | Create an account |
+| POST | `/login` | Public | Log in, returns JWT |
+| POST | `/logout` | Public | Log out |
+| GET | `/me` | Private | Get the current user |
+| PUT | `/profile` | Private | Update profile |
+
+### Events — `/events`
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| GET | `/` | Public | List events |
+| GET | `/:id` | Public | Event details |
+| GET | `/mine` | Organizer/Admin | Events created by me |
+| POST | `/` | Organizer/Admin | Create event |
+| PUT | `/:id` | Organizer/Admin | Update event |
+| DELETE | `/:id` | Organizer/Admin | Delete event |
+
+### Bookings — `/bookings`
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| POST | `/` | Private | Book tickets |
+| GET | `/mine` | Private | My bookings |
+| GET | `/:id` | Owner/Organizer/Admin | Single booking (digital pass) |
+| PUT | `/:id/cancel` | Private | Cancel and release seats |
+| GET | `/event/:eventId` | Organizer/Admin | Attendees of an event |
+
+### Dashboards — `/dashboard`
+| Method | Endpoint | Access |
+|---|---|---|
+| GET | `/attendee` | Private |
+| GET | `/organizer` | Organizer/Admin |
+| GET | `/admin` | Admin |
+
+### Admin — `/admin` (Admin only)
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/users` | List all users |
+| PUT | `/users/:id/role` | Change a user's role |
+| DELETE | `/users/:id` | Delete a user |
+| GET | `/events` | List all events |
+| PUT | `/events/:id/status` | Set event status |
+| GET | `/bookings` | List all bookings |
+
+---
+
+## 🗄 Database Models
+
+**User** — `name`, `email` (unique), `password` (hashed), `role` (`attendee` | `organizer` | `admin`), `phone`, `bio`
+
+**Event** — `title`, `description`, `category`, `organizer` → User, `date`, `time`, `location`, `city`, `poster`, `ticketPrice`, `totalCapacity`, `ticketsBooked`, `status` (`published` | `draft` | `cancelled`)
+
+**Booking** — `bookingReference` (unique), `user` → User, `event` → Event, `quantity`, `ticketPrice`, `totalAmount`, `bookingStatus` (`Confirmed` | `Cancelled`), `paymentStatus` (`Free` | `Paid` | `Pending`), `attendeeName`, `attendeeEmail`, `attendeePhone`
+
+---
+
+## ⚙️ How It Works
+
+- **Authentication:** On login the server returns a signed JWT. The frontend stores it in `localStorage` and sends it as an `Authorization: Bearer <token>` header (an HTTP-only cookie is also supported).
+- **Role-based access:** The `protect` middleware verifies the token and loads the user. `authorize(...roles)` then restricts routes by role. On the frontend, `ProtectedRoute` guards pages the same way.
+- **Overbooking prevention:** Before creating a booking, the server checks `totalCapacity − ticketsBooked` and rejects requests that exceed it. Cancelling a booking gives the seats back.
+- **Printable pass:** `@media print` rules in `index.css` hide the navigation and buttons, so only the ticket prints or saves as PDF.
+- **Dev proxy:** Vite proxies `/api` to `http://localhost:5000`, so no CORS setup is needed in development.
+
+---
+
+## ☁️ Deployment
+
+GitHub Pages can only serve static files, so it can host the **frontend only**. Deploy the full app like this:
+
+| Part | Suggested service |
+|---|---|
+| Database | MongoDB Atlas (free tier) |
+| Backend (`server/`) | Render or Railway. Set `MONGO_URI`, `JWT_SECRET`, `JWT_EXPIRE`, `CLIENT_URL` |
+| Frontend (`client/`) | GitHub Pages, Netlify, or Vercel |
+
+**Frontend steps:**
+1. Set `VITE_API_URL=https://<your-backend-url>/api` in `client/.env`.
+2. Run `npm --prefix client run build`.
+3. Publish `client/dist/`.
+4. For GitHub Pages: set `base: '/<repo-name>/'` in `vite.config.js`, and use `HashRouter` (or a 404 redirect) so page refreshes don't break routes.
+5. Add the deployed frontend URL to `CLIENT_URL` on the backend.
+
+---
+
+## 📜 Available Scripts
+
+**Root**
+| Command | Description |
+|---|---|
+| `npm run install:all` | Install root, server, and client dependencies |
+| `npm run server` | Start the backend in watch mode |
+| `npm run client` | Start the Vite dev server |
+| `npm run seed` | Reset and seed the database |
+| `npm run db:view` | Print users, events, and bookings in the terminal |
+
+**Client:** `npm run build` (production build), `npm run preview` (preview the build)
+
+---
+
+## 👨‍💻 Author
+
+Built by  
+
+Contributions, issues, and feature requests are welcome!
