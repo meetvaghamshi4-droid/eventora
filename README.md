@@ -55,8 +55,8 @@ A full-stack **MERN** (MongoDB, Express, React, Node.js) web app for discovering
 | **Frontend** | React 18, Vite, React Router v6, Tailwind CSS, Axios, Lucide React |
 | **Backend** | Node.js, Express, Mongoose |
 | **Database** | MongoDB (local or Atlas) |
-| **Auth** | JWT, bcryptjs, cookie-parser |
-| **Tools** | Morgan (logging), CORS, dotenv |
+| **Auth** |  bcryptjs |
+
 
 ---
 
